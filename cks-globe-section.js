@@ -63,7 +63,7 @@ const DESKTOP_COLUMNS = [['northAmerica', 'latam'], ['europe', 'asia']];
 
 /* Colores de marca */
 const COLOR_GRAY    = 0x7B868C;
-const COLOR_TEAL    = 0x15D1B4;
+const COLOR_TEAL    = 0x3B43FC;
 /* Océano: azul sutil, claramente distinguible del fondo #0A1628
    pero sin saturación excesiva. */
 const COLOR_OCEAN   = 0x16365A;
@@ -349,7 +349,7 @@ const STYLES = /* css */ `
 
   .cat-header {
     margin: 0 0 14px;
-    color: #15D1B4;
+    color: #3B43FC;
     font-family: inherit;
     font-weight: 600;
     font-size: clamp(11px, 0.85vw, 13px);
@@ -394,19 +394,19 @@ const STYLES = /* css */ `
     position: absolute;
     left: 0; right: 100%; bottom: 3px;
     height: 1px;
-    background: #15D1B4;
+    background: #3B43FC;
     transition: right 220ms ease;
   }
   .cat-item button:hover::after,
   .cat-item button:focus-visible::after { right: 0; }
-  .cat-item button:hover { color: #15D1B4; }
+  .cat-item button:hover { color: #3B43FC; }
   .cat-item button[aria-pressed="true"] {
-    color: #15D1B4;
+    color: #3B43FC;
     font-weight: 600;
   }
   .cat-item button[aria-pressed="true"]::after { right: 100%; }
   .cat-item button:focus-visible {
-    outline: 2px solid #15D1B4;
+    outline: 2px solid #3B43FC;
     outline-offset: 3px;
     border-radius: 2px;
   }
@@ -431,7 +431,7 @@ const STYLES = /* css */ `
     position: absolute;
     top: 0; left: 0;
     background: rgba(10, 22, 40, 0.92);
-    border: 1px solid rgba(21, 209, 180, 0.4);
+    border: 1px solid rgba(59, 67, 252, 0.4);
     color: #FFFFFF;
     font-family: inherit;
     font-size: 13px;
@@ -476,12 +476,12 @@ const STYLES = /* css */ `
   }
   .compass:hover,
   .compass:focus-visible {
-    color: #15D1B4;
+    color: #3B43FC;
     transform: scale(1.06);
   }
   .compass:active { transform: scale(0.94); }
   .compass:focus-visible {
-    outline: 2px solid rgba(21, 209, 180, 0.6);
+    outline: 2px solid rgba(59, 67, 252, 0.6);
     outline-offset: 4px;
     border-radius: 999px;
   }
@@ -1249,4 +1249,4 @@ if (!customElements.get('cks-globe-section')) {
   customElements.define('cks-globe-section', CKSGlobeSection);
 }
 
-window.CKSGlobeVersion = '3.2.0';
+window.CKSGlobeVersion = '4.1.0';

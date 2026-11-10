@@ -1,5 +1,5 @@
 /**
- * cks-globe-styles.js  —  v1.2.0   (V3: lista colapsable + estilos de globo)
+ * cks-globe-styles.js  —  v1.3.0   (V3: lista colapsable + estilos de globo)
  * ----------------------------------------------------------------------------
  * <cks-globe-styles> — derivado de <cks-globe-collapsible> (V2), que NO se
  * modifica. Tag, clase y global propios: pueden convivir en la misma página.
@@ -65,11 +65,11 @@ const LOCATIONS = {
 const I18N = {
   es: { categories: { northAmerica: 'NORTEAMÉRICA', latam: 'LATAM', europe: 'EUROPA', asia: 'ASIA' },
         panel: 'PAÍSES', expandAll: 'Expandir todo', collapseAll: 'Contraer todo', styleLabel: 'Estilo del globo',
-        intro: 'Hoy tenemos clientes en:',
+        intro: 'Hoy trabajamos con:',
         titleA: 'No importa en qué lugar del planeta te encuentres.', titleB: 'Nos encanta trabajar con todo el mundo :)' },
   en: { categories: { northAmerica: 'NORTH AMERICA', latam: 'LATAM', europe: 'EUROPE', asia: 'ASIA' },
         panel: 'COUNTRIES', expandAll: 'Expand all', collapseAll: 'Collapse all', styleLabel: 'Globe style',
-        intro: 'Today we have clients in:',
+        intro: 'Today we work with:',
         titleA: 'It doesn’t matter where on the planet you are.', titleB: 'We love working with the whole world :)' },
 };
 
@@ -417,20 +417,20 @@ const STYLES = /* css */ `
     position: relative;
     z-index: 1;
     min-width: 0;
-    height: min(78vh, 740px);
+    height: min(72vh, 680px);
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: clamp(12px, 2vh, 24px);
+    align-items: center;
+    justify-content: center;
   }
-  .right .canvas-wrap { flex: 1 1 auto; min-height: 0; height: auto; }
 
-  /* Título sobre el globo. */
+  /* Título: arriba, alineado a la izquierda, ocupa todo el ancho de la sección. */
   .map-title {
+    grid-column: 1 / -1;
     margin: 0;
+    text-align: left;
     font-family: inherit;
     font-weight: 300;
-    font-size: clamp(20px, 2vw, 30px);
+    font-size: clamp(22px, 2.4vw, 34px);
     line-height: 1.25;
     color: #FFFFFF;
     text-wrap: balance;
@@ -787,10 +787,10 @@ const STYLES = /* css */ `
     .left  { order: 2; }
     .right {
       order: 1;
-      height: auto;
-      min-height: 0;
+      height: min(60vh, 480px);
+      min-height: min(60vh, 480px);
     }
-    .right .canvas-wrap { flex: none; height: min(56vh, 440px); min-height: 320px; }
+    .map-title { order: 0; }
     .lists { grid-template-columns: 1fr; gap: clamp(14px, 2.5vh, 22px); }
     .col   { gap: clamp(14px, 2.5vh, 22px); }
     .cat-list,
@@ -1078,7 +1078,7 @@ class CKSGlobeStyles extends HTMLElement {
     const titleA = document.createElement('span');
     const titleB = document.createElement('b');
     mapTitle.append(titleA, titleB);
-    right.appendChild(mapTitle);
+    section.insertBefore(mapTitle, left);
     const canvasWrap = document.createElement('div');
     canvasWrap.className = 'canvas-wrap';
     const canvas = document.createElement('canvas');
@@ -1824,4 +1824,4 @@ if (!customElements.get('cks-globe-styles')) {
   customElements.define('cks-globe-styles', CKSGlobeStyles);
 }
 
-window.CKSGlobeStylesVersion = '1.2.0';
+window.CKSGlobeStylesVersion = '1.3.0';

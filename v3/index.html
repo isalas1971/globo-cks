@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CKS · Clientes por el mundo (V3 estilos)</title>
+  <style>
+    html, body { margin: 0; padding: 0; background: #0A1628; color: #fff; font-family: system-ui, sans-serif; }
+    body { min-height: 100vh; }
+  </style>
+</head>
+<body>
+  <!-- Atributos:
+       variant="accordion" | "panel"          start="collapsed" | "expanded"
+       globe-style="atlas (default)|classic|night|hologram|dots|brand"
+       style-selector="off" (oculta el desplegable de estilos)
+       Prueba rápida por URL: ?globe-style=night&variant=panel&start=expanded&lang=en -->
+  <cks-globe-styles></cks-globe-styles>
+  <script>
+    const q = new URLSearchParams(location.search);
+    const el = document.querySelector('cks-globe-styles');
+    ['variant', 'start', 'globe-style', 'style-selector'].forEach((a) => { if (q.get(a)) el.setAttribute(a, q.get(a)); });
+    if (q.get('lang')) document.documentElement.lang = q.get('lang');
+  </script>
+  <script type="module" src="./cks-globe-styles.js"></script>
+</body>
+</html>

@@ -10,7 +10,18 @@
   </style>
 </head>
 <body>
-  <cks-globe-section></cks-globe-section>
-  <script type="module" src="./cks-globe-section.js"></script>
+  <!-- Atributos:
+       variant="accordion" | "panel"          start="collapsed" | "expanded"
+       globe-style="atlas (default)|classic|night|hologram|dots|brand"
+       style-selector="off" (oculta el desplegable de estilos)
+       Prueba rápida por URL: ?globe-style=night&variant=panel&start=expanded&lang=en -->
+  <cks-globe-styles></cks-globe-styles>
+  <script>
+    const q = new URLSearchParams(location.search);
+    const el = document.querySelector('cks-globe-styles');
+    ['variant', 'start', 'globe-style', 'style-selector'].forEach((a) => { if (q.get(a)) el.setAttribute(a, q.get(a)); });
+    if (q.get('lang')) document.documentElement.lang = q.get('lang');
+  </script>
+  <script type="module" src="./v3/cks-globe-styles.js"></script>
 </body>
 </html>

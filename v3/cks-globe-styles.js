@@ -1,5 +1,5 @@
 /**
- * cks-globe-styles.js  —  v1.1.0   (V3: lista colapsable + estilos de globo)
+ * cks-globe-styles.js  —  v1.2.0   (V3: lista colapsable + estilos de globo)
  * ----------------------------------------------------------------------------
  * <cks-globe-styles> — derivado de <cks-globe-collapsible> (V2), que NO se
  * modifica. Tag, clase y global propios: pueden convivir en la misma página.
@@ -64,9 +64,13 @@ const LOCATIONS = {
 
 const I18N = {
   es: { categories: { northAmerica: 'NORTEAMÉRICA', latam: 'LATAM', europe: 'EUROPA', asia: 'ASIA' },
-        panel: 'PAÍSES', expandAll: 'Expandir todo', collapseAll: 'Contraer todo', styleLabel: 'Estilo del globo' },
+        panel: 'PAÍSES', expandAll: 'Expandir todo', collapseAll: 'Contraer todo', styleLabel: 'Estilo del globo',
+        intro: 'Hoy tenemos clientes en:',
+        titleA: 'No importa en qué lugar del planeta te encuentres.', titleB: 'Nos encanta trabajar con todo el mundo :)' },
   en: { categories: { northAmerica: 'NORTH AMERICA', latam: 'LATAM', europe: 'EUROPE', asia: 'ASIA' },
-        panel: 'COUNTRIES', expandAll: 'Expand all', collapseAll: 'Collapse all', styleLabel: 'Globe style' },
+        panel: 'COUNTRIES', expandAll: 'Expand all', collapseAll: 'Collapse all', styleLabel: 'Globe style',
+        intro: 'Today we have clients in:',
+        titleA: 'It doesn’t matter where on the planet you are.', titleB: 'We love working with the whole world :)' },
 };
 
 const CATEGORY_ORDER  = ['northAmerica', 'latam', 'europe', 'asia'];
@@ -413,11 +417,48 @@ const STYLES = /* css */ `
     position: relative;
     z-index: 1;
     min-width: 0;
-    height: min(72vh, 680px);
+    height: min(78vh, 740px);
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    align-items: stretch;
+    gap: clamp(12px, 2vh, 24px);
   }
+  .right .canvas-wrap { flex: 1 1 auto; min-height: 0; height: auto; }
+
+  /* Título sobre el globo. */
+  .map-title {
+    margin: 0;
+    font-family: inherit;
+    font-weight: 300;
+    font-size: clamp(20px, 2vw, 30px);
+    line-height: 1.25;
+    color: #FFFFFF;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+  .map-title b { display: block; font-weight: 600; }
+
+  /* Frase sobre el listado de países. */
+  .intro {
+    margin: 0;
+    font-family: inherit;
+    font-weight: 300;
+    font-size: clamp(18px, 1.5vw, 24px);
+    line-height: 1.3;
+    color: #FFFFFF;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+  .wrapper-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 16px;
+    margin-bottom: clamp(14px, 2vh, 20px);
+  }
+  .wrapper-head .expand-all { margin: 0 0 0 auto; display: inline-block; }
+  .lists-wrapper > .intro { margin-bottom: clamp(14px, 2vh, 20px); }
 
   .lists-wrapper {
     background: rgba(10, 22, 40, 0.6);
@@ -735,8 +776,8 @@ const STYLES = /* css */ `
   .style-opt[aria-selected="true"] { color: var(--accent); font-weight: 600; }
   .style-opt[aria-selected="true"]::after { content: "✓"; margin-left: auto; }
 
-  /* ----- Mobile (<768px) ----- */
-  @media (max-width: 767.98px) {
+  /* ----- Tablet y mobile (<1200px): apilado ----- */
+  @media (max-width: 1199.98px) {
     .section {
       grid-template-columns: 1fr;
       padding: clamp(40px, 6vh, 72px) clamp(20px, 5vw, 32px);
@@ -746,9 +787,10 @@ const STYLES = /* css */ `
     .left  { order: 2; }
     .right {
       order: 1;
-      height: min(60vh, 480px);
-      min-height: min(60vh, 480px);
+      height: auto;
+      min-height: 0;
     }
+    .right .canvas-wrap { flex: none; height: min(56vh, 440px); min-height: 320px; }
     .lists { grid-template-columns: 1fr; gap: clamp(14px, 2.5vh, 22px); }
     .col   { gap: clamp(14px, 2.5vh, 22px); }
     .cat-list,
@@ -910,7 +952,11 @@ class CKSGlobeStyles extends HTMLElement {
     const total = CATEGORY_ORDER.reduce((n, k) => n + LOCATIONS[k].length, 0);
     let panelToggle = null, panelBody = null, expandAll = null;
 
+    const intro = document.createElement('p');
+    intro.className = 'intro';
+
     if (isPanel) {
+      wrapper.appendChild(intro);
       const bar = document.createElement('div');
       bar.className = 'panel-bar';
       panelToggle = document.createElement('button');
@@ -936,7 +982,10 @@ class CKSGlobeStyles extends HTMLElement {
         const anyClosed = CATEGORY_ORDER.some((k) => !this._catOpen(k));
         CATEGORY_ORDER.forEach((k) => this._setCat(k, anyClosed));
       });
-      wrapper.appendChild(expandAll);
+      const head = document.createElement('div');
+      head.className = 'wrapper-head';
+      head.append(intro, expandAll);
+      wrapper.appendChild(head);
     }
 
     const lists = document.createElement('div');
@@ -1024,6 +1073,12 @@ class CKSGlobeStyles extends HTMLElement {
     /* Columna derecha: canvas + tooltip. */
     const right = document.createElement('div');
     right.className = 'right';
+    const mapTitle = document.createElement('h2');
+    mapTitle.className = 'map-title';
+    const titleA = document.createElement('span');
+    const titleB = document.createElement('b');
+    mapTitle.append(titleA, titleB);
+    right.appendChild(mapTitle);
     const canvasWrap = document.createElement('div');
     canvasWrap.className = 'canvas-wrap';
     const canvas = document.createElement('canvas');
@@ -1112,7 +1167,7 @@ class CKSGlobeStyles extends HTMLElement {
 
     root.appendChild(section);
 
-    this._refs = { section, lists, canvasWrap, canvas, tooltip, compass, categories: categoryNodes, panelToggle, panelBody, expandAll };
+    this._refs = { intro, titleA, titleB, section, lists, canvasWrap, canvas, tooltip, compass, categories: categoryNodes, panelToggle, panelBody, expandAll };
     if (isPanel) this._setPanel(this._startExpanded);
     else CATEGORY_ORDER.forEach((k) => this._setCat(k, this._startExpanded));
     this._applyI18n();
@@ -1252,6 +1307,9 @@ class CKSGlobeStyles extends HTMLElement {
 
   _applyI18n() {
     const t = I18N[this._lang];
+    this._refs.intro.textContent = t.intro;
+    this._refs.titleA.textContent = t.titleA;
+    this._refs.titleB.textContent = t.titleB;
     CATEGORY_ORDER.forEach((catKey) => {
       const node = this._refs.categories[catKey];
       if (!node) return;
@@ -1766,4 +1824,4 @@ if (!customElements.get('cks-globe-styles')) {
   customElements.define('cks-globe-styles', CKSGlobeStyles);
 }
 
-window.CKSGlobeStylesVersion = '1.1.0';
+window.CKSGlobeStylesVersion = '1.2.0';

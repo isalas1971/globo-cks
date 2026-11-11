@@ -1,5 +1,5 @@
 /**
- * cks-globe-styles.js  —  v1.3.0   (V3: lista colapsable + estilos de globo)
+ * cks-globe-styles.js  —  v1.4.0   (V3: lista colapsable + estilos de globo)
  * ----------------------------------------------------------------------------
  * <cks-globe-styles> — derivado de <cks-globe-collapsible> (V2), que NO se
  * modifica. Tag, clase y global propios: pueden convivir en la misma página.
@@ -10,6 +10,9 @@
  *   start="collapsed" (default) | "expanded" → estado inicial.
  *   globe-style="atlas" (default) | "classic" | "night" | "hologram" | "dots" | "brand"
  *   style-selector="off"          → oculta el desplegable de estilos.
+ *   fit                           → modo embed: ocupa exactamente el alto del iframe/ventana
+ *                                   y se autoajusta (globo flexible, lista compacta que se
+ *                                   achica si hace falta) para que NUNCA aparezca scrollbar.
  *   Evento: 'globestylechange' (detail.style) cuando el visitante cambia el estilo.
  *
  * Globo terráqueo wireframe interactivo con países rellenos (earcut +
@@ -130,7 +133,7 @@ const css = (n) => '#' + n.toString(16).padStart(6, '0');
 /* Cámara auto-fit: FOV fijo, FIT_RADIUS = radio esfera + margen para halos. */
 const FOV_DEG    = 45;
 const FOV_RAD    = FOV_DEG * Math.PI / 180;
-const FIT_RADIUS = 1.15;
+const FIT_RADIUS = 1.5;
 
 /* ========================================================================== */
 /*  Helpers geométricos                                                       */
@@ -430,7 +433,7 @@ const STYLES = /* css */ `
     text-align: left;
     font-family: inherit;
     font-weight: 300;
-    font-size: clamp(22px, 2.4vw, 34px);
+    font-size: clamp(20px, 2vw, 30px);
     line-height: 1.25;
     color: #FFFFFF;
     text-wrap: balance;
@@ -443,7 +446,7 @@ const STYLES = /* css */ `
     margin: 0;
     font-family: inherit;
     font-weight: 300;
-    font-size: clamp(18px, 1.5vw, 24px);
+    font-size: clamp(15px, 1.15vw, 19px);
     line-height: 1.3;
     color: #FFFFFF;
     text-wrap: balance;
@@ -454,35 +457,35 @@ const STYLES = /* css */ `
     flex-wrap: wrap;
     align-items: baseline;
     justify-content: space-between;
-    gap: 6px 16px;
-    margin-bottom: clamp(14px, 2vh, 20px);
+    gap: 4px 12px;
+    margin-bottom: clamp(8px, 1.4vh, 14px);
   }
   .wrapper-head .expand-all { margin: 0 0 0 auto; display: inline-block; }
-  .lists-wrapper > .intro { margin-bottom: clamp(14px, 2vh, 20px); }
+  .lists-wrapper > .intro { margin-bottom: clamp(8px, 1.4vh, 14px); }
 
   .lists-wrapper {
     background: rgba(10, 22, 40, 0.6);
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 16px;
-    padding: clamp(20px, 3vw, 32px);
+    border-radius: 12px;
+    padding: clamp(12px, 1.5vw, 20px);
   }
 
   .lists {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: clamp(24px, 2.5vw, 40px);
+    gap: clamp(14px, 1.8vw, 26px);
     align-items: start;
   }
-  .col { display: flex; flex-direction: column; gap: clamp(16px, 2.5vh, 28px); min-width: 0; }
+  .col { display: flex; flex-direction: column; gap: clamp(8px, 1.4vh, 14px); min-width: 0; }
 
   .cat-header {
-    margin: 0 0 14px;
+    margin: 0 0 6px;
     color: var(--accent);
     font-family: inherit;
     font-weight: 600;
-    font-size: clamp(11px, 0.85vw, 13px);
+    font-size: clamp(10px, 0.75vw, 11.5px);
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
@@ -493,7 +496,7 @@ const STYLES = /* css */ `
     padding: 0;
     display: grid;
     grid-template-columns: 1fr;
-    gap: 4px 16px;
+    gap: 0 12px;
   }
   /* LATAM: 6+6 en desktop */
   .cat[data-cat="latam"] .cat-list {
@@ -506,13 +509,13 @@ const STYLES = /* css */ `
     appearance: none;
     background: transparent;
     border: 0;
-    padding: 5px 0;
+    padding: 2px 0;
     margin: 0;
     color: #FFFFFF;
     font-family: inherit;
     font-weight: 400;
-    font-size: clamp(14px, 1.05vw, 16px);
-    line-height: 1.4;
+    font-size: clamp(12px, 0.88vw, 13.5px);
+    line-height: 1.3;
     text-align: left;
     cursor: pointer;
     position: relative;
@@ -581,8 +584,8 @@ const STYLES = /* css */ `
     position: absolute;
     bottom: clamp(8px, 2vh, 20px);
     right:  clamp(8px, 2vw, 20px);
-    width:  clamp(44px, 4.5vw, 56px);
-    height: clamp(44px, 4.5vw, 56px);
+    width:  clamp(36px, 3.6vw, 46px);
+    height: clamp(36px, 3.6vw, 46px);
     padding: 0;
     appearance: none;
     background: transparent;
@@ -636,15 +639,15 @@ const STYLES = /* css */ `
     background: transparent;
     border: 0;
     margin: 0;
-    padding: 4px 0;
+    padding: 2px 0;
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     color: var(--accent);
     font-family: inherit;
     font-weight: 600;
-    font-size: clamp(11px, 0.85vw, 13px);
+    font-size: clamp(10px, 0.75vw, 11.5px);
     letter-spacing: 0.12em;
     text-transform: uppercase;
     text-align: left;
@@ -660,22 +663,22 @@ const STYLES = /* css */ `
     letter-spacing: 0.04em;
   }
   .cat .cat-header { margin: 0; }
-  .cat-body.open .cat-list { padding-top: 10px; }
+  .cat-body.open .cat-list { padding-top: 4px; }
 
   .panel-bar { display: flex; align-items: center; gap: 12px; }
-  .panel-bar .toggle { font-size: clamp(12px, 0.95vw, 14px); }
+  .panel-bar .toggle { font-size: clamp(11px, 0.8vw, 12.5px); }
   .panel-bar .count { margin-left: 0; }
   .panel-bar .chev { margin-left: auto; }
   .expand-all {
     appearance: none;
     background: transparent;
     border: 0;
-    margin: 0 0 clamp(14px, 2vh, 20px) auto;
+    margin: 0 0 clamp(8px, 1.4vh, 14px) auto;
     padding: 2px 0;
     display: block;
     color: rgba(255, 255, 255, 0.65);
     font-family: inherit;
-    font-size: 12px;
+    font-size: 11px;
     letter-spacing: 0.04em;
     cursor: pointer;
     transition: color 180ms ease;
@@ -696,9 +699,9 @@ const STYLES = /* css */ `
     transition: grid-template-rows 280ms cubic-bezier(.2,.7,.2,1), visibility 0s;
   }
   .cat-body > .inner, .panel-body > .inner { overflow: hidden; min-height: 0; }
-  .panel-body.open > .inner { padding-top: clamp(16px, 2.5vh, 24px); }
+  .panel-body.open > .inner { padding-top: clamp(8px, 1.4vh, 14px); }
   /* En modo panel las regiones no se pliegan: sin botón, header normal. */
-  :host([variant="panel"]) .cat-header { margin: 0 0 14px; }
+  :host([variant="panel"]) .cat-header { margin: 0 0 6px; }
 
   @media (prefers-reduced-motion: reduce) {
     .chev, .cat-body, .panel-body { transition-duration: 1ms !important; transition-delay: 0s !important; }
@@ -776,29 +779,29 @@ const STYLES = /* css */ `
   .style-opt[aria-selected="true"] { color: var(--accent); font-weight: 600; }
   .style-opt[aria-selected="true"]::after { content: "✓"; margin-left: auto; }
 
-  /* ----- Tablet y mobile (<1200px): apilado ----- */
+  /* ----- Tablet y mobile (<1200px): apilado (modo normal) ----- */
   @media (max-width: 1199.98px) {
-    .section {
+    :host(:not([fit])) .section {
       grid-template-columns: 1fr;
       padding: clamp(40px, 6vh, 72px) clamp(20px, 5vw, 32px);
       gap: clamp(28px, 4vh, 48px);
       align-items: stretch;
     }
-    .left  { order: 2; }
-    .right {
+    :host(:not([fit])) .left  { order: 2; }
+    :host(:not([fit])) .right {
       order: 1;
       height: min(60vh, 480px);
       min-height: min(60vh, 480px);
     }
-    .map-title { order: 0; }
-    .lists { grid-template-columns: 1fr; gap: clamp(14px, 2.5vh, 22px); }
-    .col   { gap: clamp(14px, 2.5vh, 22px); }
-    .cat-list,
-    .cat[data-cat="latam"] .cat-list {
+    :host(:not([fit])) .map-title { order: 0; }
+    :host(:not([fit])) .lists { grid-template-columns: 1fr; gap: clamp(8px, 1.4vh, 12px); }
+    :host(:not([fit])) .col   { gap: clamp(8px, 1.4vh, 12px); }
+    :host(:not([fit])) .cat-list,
+    :host(:not([fit])) .cat[data-cat="latam"] .cat-list {
       grid-template-columns: 1fr 1fr;
       grid-auto-flow: row;
       grid-template-rows: none;
-      gap: 6px 16px;
+      gap: 0 12px;
     }
   }
   @media (max-width: 399.98px) {
@@ -809,6 +812,46 @@ const STYLES = /* css */ `
   @media (prefers-reduced-motion: reduce) {
     .cat-item button,
     .cat-item button::after { transition-duration: 80ms !important; }
+  }
+
+  /* ----- Modo fit (embed en iframe): ocupa exactamente el alto disponible, sin scrollbar ----- */
+  :host([fit]) { height: 100vh; height: 100dvh; overflow: hidden; }
+  :host([fit]) .section {
+    height: 100%;
+    padding: clamp(10px, 2.4vh, 26px) clamp(14px, 3vw, 48px);
+    gap: clamp(8px, 1.8vh, 18px) clamp(18px, 3vw, 40px);
+    grid-template-columns: minmax(0, 38fr) minmax(0, 62fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: center;
+    overflow: hidden;
+  }
+  :host([fit]) .map-title { font-size: clamp(16px, min(2vw, 3.4vh), 30px); line-height: 1.2; }
+  :host([fit]) .right { height: 100%; min-height: 0; }
+  :host([fit]) .canvas-wrap { min-height: 0; }
+  /* Fit: apila recién por debajo de 960px de ancho. */
+  @media (max-width: 959.98px) {
+    :host([fit]) .section {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      align-items: stretch;
+    }
+    :host([fit]) .map-title { order: 0; }
+    :host([fit]) .right { order: 1; height: 100%; min-height: 0; }
+    :host([fit]) .left  { order: 2; }
+    :host([fit]) .canvas-wrap { min-height: 110px; }
+    :host([fit]) .lists { grid-template-columns: 1fr; gap: clamp(8px, 1.4vh, 12px); }
+    :host([fit]) .col   { gap: clamp(8px, 1.4vh, 12px); }
+    :host([fit]) .cat-list,
+    :host([fit]) .cat[data-cat="latam"] .cat-list {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-flow: row;
+      grid-template-rows: none;
+      gap: 0 12px;
+    }
+  }
+  @media (max-width: 399.98px) {
+    :host([fit]) .cat-list,
+    :host([fit]) .cat[data-cat="latam"] .cat-list { grid-template-columns: 1fr; }
   }
 `;
 
@@ -915,6 +958,9 @@ class CKSGlobeStyles extends HTMLElement {
 
     this._ro = new ResizeObserver(this._onResize);
     this._ro.observe(this);
+    /* Modo fit: también reacciona al tamaño de la lista (expandir/contraer) y del canvas. */
+    this._ro.observe(this._refs.left);
+    this._ro.observe(this._refs.canvasWrap);
   }
 
   disconnectedCallback() {
@@ -1167,7 +1213,7 @@ class CKSGlobeStyles extends HTMLElement {
 
     root.appendChild(section);
 
-    this._refs = { intro, titleA, titleB, section, lists, canvasWrap, canvas, tooltip, compass, categories: categoryNodes, panelToggle, panelBody, expandAll };
+    this._refs = { left, right, intro, titleA, titleB, section, lists, canvasWrap, canvas, tooltip, compass, categories: categoryNodes, panelToggle, panelBody, expandAll };
     if (isPanel) this._setPanel(this._startExpanded);
     else CATEGORY_ORDER.forEach((k) => this._setCat(k, this._startExpanded));
     this._applyI18n();
@@ -1618,7 +1664,23 @@ class CKSGlobeStyles extends HTMLElement {
 
   /* ===== Resize con auto-fit ===== */
 
+  /* Modo fit (atributo `fit`): si la lista no entra en el alto disponible, la achica
+   * (zoom, mínimo 0.4) para que nunca aparezca scrollbar. Sin overflow no hace nada. */
+  _fitList() {
+    if (!this.hasAttribute('fit') || !this._refs) return;
+    const { left, right, section } = this._refs;
+    if (!this._stackMql) this._stackMql = window.matchMedia('(max-width: 959.98px)');
+    left.style.zoom = '';
+    const lh = left.getBoundingClientRect().height;
+    if (!lh) return;
+    const ov = this._stackMql.matches
+      ? section.scrollHeight - section.clientHeight
+      : lh - right.getBoundingClientRect().height;
+    if (ov > 1) left.style.zoom = String(clamp((lh - ov) / lh, 0.4, 1).toFixed(3));
+  }
+
   _onResize() {
+    this._fitList();
     if (!this._three) return;
     const { renderer, camera } = this._three;
     const rect = this._refs.canvasWrap.getBoundingClientRect();
@@ -1824,4 +1886,4 @@ if (!customElements.get('cks-globe-styles')) {
   customElements.define('cks-globe-styles', CKSGlobeStyles);
 }
 
-window.CKSGlobeStylesVersion = '1.3.0';
+window.CKSGlobeStylesVersion = '1.4.0';
